@@ -1,44 +1,63 @@
-import java.awt.Container;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.*;
 import javax.imageio.ImageIO;
 
-public class MainFrames implements WindowListener,ActionListener{
+public class MainFrames implements WindowListener,ActionListener,ChangeListener{
 
 	private BufferedImage img = null;
-	private JFrame fBefore,fAfter;
+	private JFrame frameBefore,frameAfter;
+	private Tavola tavolaBefore,tavolaAfter;
+	private JPanel jPanelBefore;
+	private JPanel options;
+	private JSlider slider;
 	
 	public MainFrames(){
 		try {
 			img = ImageIO.read(new File("E:/Users/Draga/workspace/ProjectSteganography/bin/lena.tiff"));
 		} catch (IOException e) {e.printStackTrace();}
 		
-		fBefore = new JFrame("Prima");
-		fAfter = new JFrame("Dopo");
+		frameBefore = new JFrame("Prima");
+		frameAfter = new JFrame("Dopo");
 		
-		Container containerBef = fBefore.getContentPane();
-		Container containerAft = fAfter.getContentPane();
+		slider = new JSlider(SwingConstants.HORIZONTAL,0,8,0);
+		slider.setMajorTickSpacing(4);
+		slider.setMinorTickSpacing(1);
+		slider.setPaintTicks(true);
+		slider.addChangeListener(this);
 		
-		Tavola tavolaBefore = new Tavola(img);
-		Tavola tavolaAfter = new Tavola(tavolaBefore.getCopy());
+		tavolaBefore = new Tavola(img);
+		tavolaAfter = new Tavola(tavolaBefore.getCopy());
 		
-		containerBef.add(tavolaBefore);
-		containerAft.add(tavolaAfter);
-		fBefore.addWindowListener(this);
-		fAfter.addWindowListener(this);
+		jPanelBefore = new JPanel(new BorderLayout());
+		options = new JPanel(new BorderLayout());
 		
-		fBefore.setLocation(100, 100);
-		fAfter.setLocation(650, 100);
-		
-		fBefore.setSize(520,520);
-		fAfter.setSize(520,520);
+		options.setBorder(BorderFactory.createEmptyBorder(10,5,10,5));
 
-		fBefore.setVisible(true);
-		fAfter.setVisible(true);
+		options.add(slider,BorderLayout.LINE_START);
+		
+		jPanelBefore.add(options,BorderLayout.PAGE_END);
+		jPanelBefore.add(tavolaBefore,BorderLayout.CENTER);
+		
+		frameAfter.add(tavolaAfter);
+		
+		frameBefore.setContentPane(jPanelBefore);
+		
+		frameBefore.addWindowListener(this);
+		frameAfter.addWindowListener(this);
+		
+		frameBefore.setLocation(150, 100);
+		frameAfter.setLocation(700, 100);
+		
+		frameBefore.setSize(img.getWidth(),img.getHeight()+50);
+		frameAfter.setSize(img.getWidth(),img.getHeight());
+		
+		frameBefore.setVisible(true);
+		frameAfter.setVisible(true);
 	}
 
 	@Override
@@ -86,6 +105,12 @@ public class MainFrames implements WindowListener,ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void stateChanged(ChangeEvent e){
+		JSlider sl = (JSlider)e.getSource();
+		//sl.getValue()
 	}
 	
 	

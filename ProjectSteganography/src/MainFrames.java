@@ -5,24 +5,32 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import sun.font.CreatedFontTracker;
 import javax.imageio.ImageIO;
 
-public class MainFrames implements WindowListener,ActionListener,ChangeListener{
+public class MainFrames implements ActionListener,ChangeListener{
 
-	private BufferedImage img = null;
-	private JFrame frameBefore,frameAfter;
-	private Tavola tavolaBefore,tavolaAfter;
-	private JPanel jPanelBefore;
-	private JPanel options;
-	private JSlider slider;
+	private static BufferedImage img;
+	private static JFrame frame;
+	private static Tavola jTavola;
+	private static JPanel options;
+	private static JSlider slider;
+	private static JFileChooser fileExplorer;
 	
-	public MainFrames(){
+	public static void main(String[] args) throws IOException {
+
+			new MainFrames().create();
+	
+	}
+	
+	
+	public void create() throws IOException{
+			
 		try {
-			img = ImageIO.read(new File("E:/Users/Draga/workspace/ProjectSteganography/bin/lena.tiff"));
+			img = ImageIO.read(new File("ProjectSteganography/lena.png"));
 		} catch (IOException e) {e.printStackTrace();}
 		
-		frameBefore = new JFrame("Prima");
-		frameAfter = new JFrame("Dopo");
+		frame = new JFrame("Prima");
 		
 		slider = new JSlider(SwingConstants.HORIZONTAL,0,8,0);
 		slider.setMajorTickSpacing(4);
@@ -30,92 +38,57 @@ public class MainFrames implements WindowListener,ActionListener,ChangeListener{
 		slider.setPaintTicks(true);
 		slider.addChangeListener(this);
 		
-		tavolaBefore = new Tavola(img);
-		tavolaAfter = new Tavola(tavolaBefore.getCopy());
+		fileExplorer = new JFileChooser();
+		fileExplorer.setCurrentDirectory(new File("ProjectSteganography"));
+		fileExplorer.addActionListener(this);
 		
-		jPanelBefore = new JPanel(new BorderLayout());
-		options = new JPanel(new BorderLayout());
-		
+		options = new JPanel();
 		options.setBorder(BorderFactory.createEmptyBorder(10,5,10,5));
-
 		options.add(slider,BorderLayout.LINE_START);
+		options.add(fileExplorer,BorderLayout.LINE_END);
 		
-		jPanelBefore.add(options,BorderLayout.PAGE_END);
-		jPanelBefore.add(tavolaBefore,BorderLayout.CENTER);
+		jTavola = new Tavola(img);
+		jTavola.setBackground(Color.black);
 		
-		frameAfter.add(tavolaAfter);
+		frame.add(jTavola,BorderLayout.CENTER);
+		frame.add(options,BorderLayout.PAGE_END);
 		
-		frameBefore.setContentPane(jPanelBefore);
-		
-		frameBefore.addWindowListener(this);
-		frameAfter.addWindowListener(this);
-		
-		frameBefore.setLocation(150, 100);
-		frameAfter.setLocation(700, 100);
-		
-		frameBefore.setSize(img.getWidth(),img.getHeight()+50);
-		frameAfter.setSize(img.getWidth(),img.getHeight());
-		
-		frameBefore.setVisible(true);
-		frameAfter.setVisible(true);
+		frame.setLocation(30, 100);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(900,910);	
+		frame.setVisible(true);
 	}
 
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		System.exit(0);
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		Object obj = e.getSource();
+		if(obj.getClass()==JFileChooser.class){
+			JFileChooser fc = (JFileChooser)obj;
+			File fl = fc.getSelectedFile();
+
+			jTavola.changeImage(fl);
+			jTavola.repaint();
+		}
 		
 	}
 	
 	@Override
 	public void stateChanged(ChangeEvent e){
-		JSlider sl = (JSlider)e.getSource();
-		//sl.getValue()
+		Object obj = e.getSource();
+		if(obj.getClass()==JSlider.class){
+			JSlider sl = (JSlider)obj;
+			
+			jTavola.setNLsb(sl.getValue());
+			jTavola.updateImage();
+			
+			System.out.println("slider"+sl.getValue());
+		}
+		
 	}
 	
-	
-	public static void main(String[] args) {
-		MainFrames mainFrames = new MainFrames();
-	}
+
+
 	
 }

@@ -1,4 +1,4 @@
-package steganography.decode;
+package steganography.encode;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.imageio.ImageIO;
 
-public class MainFrames implements ActionListener,ChangeListener{
+public class MainFramesEncode implements ActionListener,ChangeListener{
 
 	private static BufferedImage img;
 	private static JFrame frame;
@@ -23,7 +23,7 @@ public class MainFrames implements ActionListener,ChangeListener{
 	private static JTextArea msgArea;
 	private static JScrollPane msgAreaScroll;
 	
-	public static void main(String[] args) throws IOException { new MainFrames().create(); }
+	public static void main(String[] args) throws IOException { new MainFramesEncode().create(); }
 	
 	public void create() throws IOException{
 			

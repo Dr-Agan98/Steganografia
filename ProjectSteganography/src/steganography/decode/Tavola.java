@@ -1,3 +1,4 @@
+package steganography.decode;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
@@ -43,19 +44,19 @@ public class Tavola extends JPanel{
 		}
 		this.copy = SteganographyTools.convert(img,nLsb,dataHide);
 	}
-	
-	public void setNLsb(int n){
-		this.nLsb = n;
-	}
-	
-	public int getNPixImg(){
-		return nPixImg;
-	}
-	
+
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		nPixImg = img.getHeight()*img.getWidth();
 		g.drawImage(copy, ((1000-copy.getWidth(null))/2),((600-copy.getHeight(null))/2), null);
 	}
+	
+	
+	//Setter
+	public void setNLsb(int n){this.nLsb = n;}
+	
+	//Getter
+	public int getNPixImg(){return nPixImg;}
+	
 	
 }

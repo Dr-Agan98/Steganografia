@@ -1,3 +1,4 @@
+package steganography.encode;
 import java.awt.image.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -56,7 +57,6 @@ public class SteganographyTools {
 	}*/
 	
 	
-	
 	public static BufferedImage convert(BufferedImage drawableImg,int nLsb,BitSet hiddenData){
 		byte[] pixels = (((DataBufferByte)drawableImg.getRaster().getDataBuffer()).getData());
 		BitSet bits = BitSet.valueOf(pixels);
@@ -94,6 +94,8 @@ public class SteganographyTools {
 					}
 				}
 				if(seqBit==PIXEL_BITS)seqBit=0;
+			}else{
+				endData = true;
 			}
 			
 		}
@@ -120,7 +122,6 @@ public class SteganographyTools {
 			text+=line;
 		}		
 		
-	//	System.out.println(text);
 		return (BitSet.valueOf(text.getBytes()));
 	}
 

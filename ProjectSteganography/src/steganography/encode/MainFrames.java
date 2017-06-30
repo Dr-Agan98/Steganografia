@@ -1,3 +1,4 @@
+package steganography.encode;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +21,6 @@ public class MainFrames implements ActionListener,ChangeListener{
 	private static JButton openFE;
 	private static JLabel avlbSpace;
 	private static JTextArea msgArea;
-	private static JButton msgImpl;
 	private static JScrollPane msgAreaScroll;
 	
 	public static void main(String[] args) throws IOException { new MainFrames().create(); }
@@ -34,7 +34,7 @@ public class MainFrames implements ActionListener,ChangeListener{
 		frame = new JFrame("Prima");
 		frame.setLayout(new FlowLayout());
 	
-		//File Explorer Area
+		//File Explorer Area(top)
 		fileExplorer = new JFileChooser();
 		fileExplorer.setCurrentDirectory(new File("ProjectSteganography"));
 		fileExplorer.addActionListener(this);
@@ -48,7 +48,7 @@ public class MainFrames implements ActionListener,ChangeListener{
 		top.add(openFE);
 		//
 		
-		//Message Insertion Area
+		//Message Insertion Area(center)
 		msgArea = new JTextArea();
 		msgArea.setText("Turd");
 		msgArea.setRows(7);
@@ -61,7 +61,7 @@ public class MainFrames implements ActionListener,ChangeListener{
 		//
 		
 		
-		//Slider
+		//Slider(bottom)
 		slider = new JSlider(SwingConstants.HORIZONTAL,0,8,0);
 		slider.setMajorTickSpacing(4);
 		slider.setMinorTickSpacing(1);

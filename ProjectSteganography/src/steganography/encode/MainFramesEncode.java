@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 	private static JSlider slider;
 	private static JFileChooser fileExplorer;
 	private static JTextField pathExpl;
-	private static JButton openFE;
+	private static JButton openFE,saveImg;
 	private static JLabel avlbSpace;
 	private static JTextArea msgArea;
 	private static JScrollPane msgAreaScroll;
@@ -28,7 +29,7 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 	public void create() throws IOException{
 			
 		try {
-			img = ImageIO.read(new File("ProjectSteganography/lena.png"));
+			img = ImageIO.read(new File("ProjectSteganography/noimage.png"));
 		} catch (IOException e) {e.printStackTrace();}
 		
 		frame = new JFrame("Prima");
@@ -50,7 +51,7 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 		
 		//Message Insertion Area(center)
 		msgArea = new JTextArea();
-		msgArea.setText("Turd");
+		msgArea.setText("");
 		msgArea.setRows(7);
 		msgArea.setColumns(40);
 		msgArea.setLineWrap(true);
@@ -68,10 +69,13 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 		slider.setPaintTicks(true);
 		slider.addChangeListener(this);
 		avlbSpace = new JLabel("Spazio Disponibile: 0 Byte");
+		saveImg = new JButton("Salva Immagine");
+		saveImg.addActionListener(this);
 		
-		bottom = new JPanel();
-		bottom.add(slider);
-		bottom.add(avlbSpace);
+		bottom = new JPanel(new BorderLayout(10,10));
+		bottom.add(slider,BorderLayout.LINE_START);
+		bottom.add(avlbSpace,BorderLayout.LINE_END);
+		bottom.add(saveImg,BorderLayout.PAGE_END);
 		//
 		
 			
@@ -109,13 +113,16 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 			avlbSpace.setText("Spazio Disponibile: "+((((jTavola.getNPixImg()*3*slValue))/4)/8)+" Byte");
 			pathExpl.setText(fl.getPath());
 
-			BitSet dataHide = BitSet.valueOf((msgArea.getText()).getBytes());
+			BitSet dataHide = BitSet.valueOf((msgArea.getText()).getBytes(StandardCharsets.UTF_8));
 			
 			jTavola.changeImage(fl,dataHide);
 			jTavola.repaint();
 		}
 		if(obj==openFE){
 			fileExplorer.showOpenDialog(null);
+		}
+		if(obj==saveImg){
+			jTavola.saveImage();
 		}
 
 	}
@@ -125,13 +132,16 @@ public class MainFramesEncode implements ActionListener,ChangeListener{
 		Object obj = e.getSource();
 		if(obj==slider){
 			
-			BitSet dataHide = BitSet.valueOf((msgArea.getText()).getBytes());
+			String txt = msgArea.getText();
+			txt += "@@@";
+			long dataLength = (txt.length())*8;
+			BitSet dataHide = BitSet.valueOf((txt).getBytes());
 			int slValue = slider.getValue();
 			avlbSpace.setText("Spazio Disponibile: "+((((jTavola.getNPixImg()*3*slValue))/4)/8)+" Byte");
 			
 			if(slValue!=0){
 				jTavola.setNLsb(slValue);
-				jTavola.updateImage(dataHide);
+				jTavola.updateImage(dataHide,dataLength);
 			}
 		}
 		

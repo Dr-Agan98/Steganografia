@@ -1,11 +1,13 @@
 package steganography.encode;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.BitSet;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
 import javax.swing.JPanel;
 
 
@@ -29,9 +31,25 @@ public class Tavola extends JPanel{
 		this.nLsb = 0;
 	}
 	
-	public void updateImage(BitSet dataHide){
-		this.copy = SteganographyTools.convert(img,nLsb,dataHide);
+	public void updateImage(BitSet dataHide,long dataLength){
+		this.copy = SteganographyTools.convert(img,nLsb,dataHide,dataLength);
 		repaint();
+	}
+	
+	public void saveImage(){
+		File stegoImg = new File("ProjectSteganography/stegoImages/stegoImg.png");
+		try {
+			stegoImg.createNewFile();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			ImageIO.write(copy, "png", stegoImg);
+		} catch (IOException e) {
+			System.out.println("Couldn't write image!");
+		}
+		
 	}
 	
 	public void changeImage(File fl,BitSet dataHide){
@@ -39,10 +57,13 @@ public class Tavola extends JPanel{
 			Image original = ImageIO.read(fl);
 			this.img = new BufferedImage(original.getWidth(null), original.getHeight(null), BufferedImage.TYPE_3BYTE_BGR);
 			this.img.getGraphics().drawImage(original,0,0, null);
+			this.copy = new BufferedImage(original.getWidth(null), original.getHeight(null), BufferedImage.TYPE_3BYTE_BGR);
+			this.copy.getGraphics().drawImage(original, 0, 0, null);
 		} catch (IOException e) {
 			System.out.println("Couldn't read file");
 		}
-		this.copy = SteganographyTools.convert(img,nLsb,dataHide);
+		//this.copy = SteganographyTools.convert(img,nLsb,dataHide);
+		repaint();
 	}
 
 	public void paintComponent(Graphics g){

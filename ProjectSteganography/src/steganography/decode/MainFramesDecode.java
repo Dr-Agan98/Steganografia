@@ -21,7 +21,7 @@ public class MainFramesDecode implements ActionListener,ChangeListener{
 	private static JTextField pathExpl,pathSeed;
 	private static JButton openFE,openSE;
 	private static JTextArea msgArea;
-	private static JScrollPane msgAreaScroll;
+	private static JScrollPane msgAreaScroll,container,jpT;
 	private static long seed = 0;
 	
 	public static void main(String[] args) throws IOException { new MainFramesDecode().create(); }
@@ -32,7 +32,7 @@ public class MainFramesDecode implements ActionListener,ChangeListener{
 			img = ImageIO.read(new File("ProjectSteganography/noimage.png"));
 		} catch (IOException e) {e.printStackTrace();}
 		
-		frame = new JFrame("Prima");
+		frame = new JFrame("Decode");
 		frame.setLayout(new FlowLayout());
 	
 		//File Explorer Area(top)
@@ -77,17 +77,17 @@ public class MainFramesDecode implements ActionListener,ChangeListener{
 		slider.setPaintTicks(true);
 		slider.addChangeListener(this);
 		
-		bottom = new JPanel(new BorderLayout(10, 10));
+		bottom = new JPanel(new BorderLayout(5, 5));
 		bottom.add(pathSeed,BorderLayout.LINE_START);
 		bottom.add(openSE,BorderLayout.LINE_END);
 		bottom.add(slider,BorderLayout.PAGE_END);
 		//
 			
 		BorderLayout layout = new BorderLayout();
-		layout.setHgap(10);
-		layout.setVgap(30);
+		layout.setHgap(5);
+		layout.setVgap(5);
 		options = new JPanel(layout);
-		options.setBorder(BorderFactory.createEmptyBorder(10,5,10,5));
+		options.setBorder(BorderFactory.createEmptyBorder(3,1,3,1));
 		
 		options.add(top,BorderLayout.PAGE_START);
 		options.add(center,BorderLayout.CENTER);
@@ -95,14 +95,20 @@ public class MainFramesDecode implements ActionListener,ChangeListener{
 	
 		jTavola = new Tavola(img);
 		jTavola.setBackground(Color.black);
-		jTavola.setPreferredSize(new Dimension(1000, 600));
+		jTavola.setPreferredSize(new Dimension(900, 550));
 		
-		frame.add(jTavola);
-		frame.add(options);
+		container = new JScrollPane(options);
+		container.setPreferredSize(new Dimension(800,150));
+
+		jpT = new JScrollPane(jTavola);
+		jpT.setPreferredSize(new Dimension(800,500));
+		
+		frame.add(jpT);
+		frame.add(container);
 		
 		frame.setLocation(30, 50);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1000,950);	
+		frame.pack();
 		frame.setVisible(true);
 	}
 
